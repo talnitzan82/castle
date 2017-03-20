@@ -138,4 +138,22 @@ KEY `IOCODEINDEX` (`ioID`),
 KEY `camp_index` (`camp_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 */
+
+
+/*
+   CREATE TABLE `d_tags` (
+  `id` bigint(18) NOT NULL AUTO_INCREMENT,
+  `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `type` varchar(2) CHARACTER SET utf8 DEFAULT NULL,
+  `d_system` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
+  `d_partner` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
+  `app_name` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
+  `o_system` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
+  `cpi` float(7,3) DEFAULT NULL,
+  `geo` varchar(5) CHARACTER SET utf8 DEFAULT NULL,
+  `url` varchar(2000) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+ */
 ?>

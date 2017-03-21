@@ -1,7 +1,8 @@
 <?php
 require_once (__DIR__."/utils/uuid.php");
+require_once (__DIR__."/utils/legit_domains.php");
 //require_once (__DIR__."/utils/utilFuncs.php");
-require_once (__DIR__."/server/db.php");
+//require_once (__DIR__."/server/db.php");
 
 $tableName = 's_traffic';
 
@@ -17,15 +18,16 @@ $impDetails['s_system'] = isset($_GET['s_system']) ? $_GET['s_system'] : "no_sys
 $height = $impDetails['height'] = str_replace("'","",$_GET['height']);
 $width = $impDetails['width'] = str_replace("'","",$_GET['width']);
 
-$impDetails['top_domain'] = isset($_GET['domain']) && strlen($_GET['domain'])>0 ? $_GET['domain'] : extract_domain(processURLString(getReferer()));
+$impDetails['referer'] = extract_domain(getReferer());
+$impDetails['top_domain'] = isset($_GET['domain']) && strlen($_GET['domain'])>0 ? extract_domain($_GET['domain']) : $impDetails['referer'];
 
-$isAudit = isAudit($width,$height);
+$isAudit = isAudit($width,$height, $impDetails['top_domain'], $legit_domains);
 $impDetails['audit_mode'] = $isAudit ? 1 : 0;
 $uAgent = $impDetails['uAgent'] = $_SERVER['HTTP_USER_AGENT'];
 //TODO: split user agent
 
 //insert to DB
-insertImpression($impDetails);
+//insertImpression($impDetails);
 
 if ($isAudit) {
     include "audit.js";
@@ -33,8 +35,9 @@ if ($isAudit) {
     include "no_audit.js";
 }
 
-function isAudit($width,$height) {
-    if (!is_numeric($width) || !is_numeric($height)) {
+function isAudit($width,$height, $top_domain, $legit_domains) {
+    echo $top_domain;
+    if (!is_numeric($width) || !is_numeric($height) || !in_array ($top_domain , $legit_domains)) {
         return true;
     };
 }
@@ -56,7 +59,7 @@ function insertImpression($impDetails) {
 
     $insert_query = "INSERT INTO ".$tableName." SET ".implode(",",$arrInsert);
 //    echo $insert_query;
-    mysqli_query($db_con, $insert_query);
+//    mysqli_query($db_con, $insert_query);
 
     return $impDetails['uuid'];
 }

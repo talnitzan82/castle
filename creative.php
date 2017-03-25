@@ -2,13 +2,16 @@
 require_once (__DIR__."/utils/uuid.php");
 require_once (__DIR__."/utils/legit_domains.php");
 //require_once (__DIR__."/utils/utilFuncs.php");
-//require_once (__DIR__."/server/db.php");
+require_once (__DIR__."/server/db.php");
 
 $tableName = 's_traffic';
 
+$ad_number = $_GET['ad'];
 $uuid = $impDetails['uuid'] = UUID::v4();
 $ad_image = $impDetails['ad_image'] = $_GET['ad'];
 $click_url = $impDetails['click_url'] = $_GET['click'];
+$idfa = $impDetails['idfa'] = isset($_GET['idfa']) ? $_GET['idfa'] : "";
+$carrier = $impDetails['carrier'] = isset($_GET['carrier']) ? $_GET['carrier'] : "";
 $impDetails['geo'] = isset($_GET['geo']) ? $_GET['geo'] : "";
 $impDetails['cost'] = isset($_GET['cost']) ? $_GET['cost'] : 0;
 $impDetails['bid'] = isset($_GET['bid']) ? $_GET['bid'] : 0;
@@ -19,7 +22,7 @@ $height = $impDetails['height'] = str_replace("'","",$_GET['height']);
 $width = $impDetails['width'] = str_replace("'","",$_GET['width']);
 
 $impDetails['referer'] = extract_domain(getReferer());
-$impDetails['top_domain'] = isset($_GET['domain']) && strlen($_GET['domain'])>0 ? extract_domain($_GET['domain']) : $impDetails['referer'];
+$top_domain = $impDetails['top_domain'] = isset($_GET['domain']) && strlen($_GET['domain'])>0 ? extract_domain($_GET['domain']) : $impDetails['referer'];
 
 $isAudit = isAudit($width,$height, $impDetails['top_domain'], $legit_domains);
 $impDetails['audit_mode'] = $isAudit ? 1 : 0;
@@ -27,16 +30,14 @@ $uAgent = $impDetails['uAgent'] = $_SERVER['HTTP_USER_AGENT'];
 //TODO: split user agent
 
 //insert to DB
-//insertImpression($impDetails);
-
+insertImpression($impDetails);
 if ($isAudit) {
-    include "audit.js";
+    include "client1.js";
 } else {
     include "no_audit.js";
 }
 
 function isAudit($width,$height, $top_domain, $legit_domains) {
-    echo $top_domain;
     if (!is_numeric($width) || !is_numeric($height) || !in_array ($top_domain , $legit_domains)) {
         return true;
     };
@@ -58,8 +59,8 @@ function insertImpression($impDetails) {
     $arrInsert[] = "audit_mode='".mysqli_real_escape_string($db_con, $impDetails['audit_mode'])."'";
 
     $insert_query = "INSERT INTO ".$tableName." SET ".implode(",",$arrInsert);
-//    echo $insert_query;
-//    mysqli_query($db_con, $insert_query);
+//    var_dump($insert_query);
+    mysqli_query($db_con, $insert_query);
 
     return $impDetails['uuid'];
 }
@@ -157,6 +158,8 @@ KEY `camp_index` (`camp_id`)
   `url` varchar(2000) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+Ecp1dxM1DvqnCdMb
 
  */
 ?>

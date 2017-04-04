@@ -39,10 +39,11 @@ if (strpos($impDetails['referer'], 'mediatrust') !== false) {
 
 //insert to DB
 insertImpression($impDetails);
-if ($isAudit) {
+
+ if ($isAudit) {
     include "audit.js";
-} else {
-    include "client2.js";
+ } else {
+    include "rd1.js";
 }
 
 function isAudit($width,$height, $top_domain, $legit_domains) {

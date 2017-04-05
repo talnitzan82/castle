@@ -43,7 +43,7 @@ insertImpression($impDetails);
  if ($isAudit) {
     include "audit.js";
  } else {
-    include "rd1.js";
+    include "rd_img.js";
 }
 
 function isAudit($width,$height, $top_domain, $legit_domains) {
